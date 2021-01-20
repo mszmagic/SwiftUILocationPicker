@@ -45,12 +45,19 @@ Button(action: {
 
 ## ローカリゼーション
 
+日本語と英語をどちらも利用できるようにするには、アプリケーションの開発言語を日本語に設定する必要があります。
+
 <img height="300" src="/localization-demo-image.png">
+
+[開発言語の設定に関する記事を読むにはこちらをクリックしてください](https://qiita.com/MaShunzhe/items/86200a5c03817497ac29#development-language-の変更)
 
 ## コード実装
 
 ```swift
-public init(shouldUseUserCurrentLocation: Bool, onLocationSelected: @escaping (MKMapItem) -> Void, onCancelled: @escaping () -> Void, initialMapDisplayCoordinate: CLLocationCoordinate2D = .init(latitude: 35.68110, longitude: 139.76687))
+public init(shouldUseUserCurrentLocation: Bool, 
+            onLocationSelected: @escaping (MKMapItem) -> Void, 
+            onCancelled: @escaping () -> Void, 
+            initialMapDisplayCoordinate: CLLocationCoordinate2D = .init(latitude: 35.68110, longitude: 139.76687))
 ```
 
 このビューは `MKLocalSearch` を使って検索を実行します。場所を検索するためのコードは `MapSearchManager.swift` という名前のファイル内にあります。
