@@ -43,6 +43,10 @@ Button(action: {
 })
 ```
 
+## ローカリゼーション
+
+<img height="300" src="/localization-demo-image.png">
+
 ## コード実装
 
 ```swift
