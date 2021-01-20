@@ -1,6 +1,12 @@
 # SwiftUILocationPicker
 
+<img width="350" alt="image" src="/social-image.png">
+
 これはSwiftUIビューで、ユーザーは場所の名前を入力して位置を特定することができます。また、ユーザーの現在位置を把握し、マップの中心にその位置を表示することも可能です。
+
+(This is a location picker written in SwiftUI. A search bar and a map display are included in the view. English localization is included.)
+
+<img width="500" alt="image" src="/demo-image.gif">
 
 ## 場所を特定する方法は？
 
@@ -11,12 +17,6 @@
 次に、ユーザーたちは結果アイテムを入力して、それをマップ上に表示するか、または場所を選択するかのオプションを得ることができます。ユーザーが[マップ上に表示]オプションをタップすると、マップは検索結果の場所を中心として配置され、マップの注釈が表示されます。
 
 ユーザーが[場所を選択]するオプションをクリックすると、選択した場所の名前、住所、座標を含むオブジェクト `MKMapItem` とともに、完了ハンドラー `onLocationSelected` が呼び出されます。
-
-## コード実装
-
-このビューは `MKLocalSearch` を使って検索を実行します。場所を検索するためのコードは `MapSearchManager.swift` という名前のファイル内にあります。
-
-`LocationPicker` ビューは、それだけでは閉じません。`onLocationSelected` `onCancelled` 関数で特有の関数を呼び出して閉じる必要があります。
 
 ## 使用法
 
@@ -42,5 +42,17 @@ Button(action: {
     })
 })
 ```
+
+## コード実装
+
+```swift
+public init(shouldUseUserCurrentLocation: Bool, onLocationSelected: @escaping (MKMapItem) -> Void, onCancelled: @escaping () -> Void, initialMapDisplayCoordinate: CLLocationCoordinate2D = .init(latitude: 35.68110, longitude: 139.76687))
+```
+
+このビューは `MKLocalSearch` を使って検索を実行します。場所を検索するためのコードは `MapSearchManager.swift` という名前のファイル内にあります。
+
+`LocationPicker` ビューは、それだけでは閉じません。`onLocationSelected` `onCancelled` 関数で特有の関数を呼び出して閉じる必要があります。
+
+`initialMapDisplayCoordinate` パラメータを調整することで、マップの初期位置を変更することもできます。
 
 

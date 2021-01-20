@@ -24,7 +24,7 @@ struct LocationPicker_Example: View {
                 Button(action: {
                     self.showLocationPicker = true
                 }, label: {
-                    Text("場所を選択してください")
+                    Text(NSLocalizedString("場所を選択してください", comment: ""))
                 })
                 .sheet(isPresented: $showLocationPicker, content: {
                     LocationPicker(shouldUseUserCurrentLocation: true, onLocationSelected: { item in
