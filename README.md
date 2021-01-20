@@ -6,7 +6,7 @@
 
 (This is a location picker written in SwiftUI. A search bar and a map display are included in the view. English localization is included.)
 
-<img width="500" alt="image" src="/demo-image.gif">
+<img width="350" alt="image" src="/demo-image.gif">
 
 ## 場所を特定する方法は？
 
