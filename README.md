@@ -21,9 +21,9 @@
 ## 使用法
 
 ```swift
-// import LocationPicker
+import LocationPicker // 1
 
-@State var showLocationPicker: Bool = false
+@State var showLocationPicker: Bool = false // 2
 
 Button(action: {
     self.showLocationPicker = true
