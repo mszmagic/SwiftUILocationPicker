@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "SwiftUILibrary",
+        "repositoryURL": "https://github.com/mszmagic/SwiftUILibrary.git",
+        "state": {
+          "branch": "master",
+          "revision": "1422c9f4e9fe42fd67b9ce8c709da57e26996f27",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}

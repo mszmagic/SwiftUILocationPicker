@@ -15,7 +15,7 @@ let package = Package(
             targets: ["LocationPicker"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/mszmagic/SwiftUILibrary.git", from: "1.7.0"),
+        .package(url: "https://github.com/mszmagic/SwiftUILibrary.git", .branch("master")),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
