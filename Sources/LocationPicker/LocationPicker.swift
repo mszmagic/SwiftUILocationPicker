@@ -76,7 +76,7 @@ public struct LocationPicker: View {
                             .padding()
                             .listStyle(InsetGroupedListStyle())
                         } else {
-                            Text("テキストフィールドにキーワードを入力し、キーボードのリターンキーをクリックして始めます。")
+                            Text(NSLocalizedString("テキストフィールドにキーワードを入力し、キーボードのリターンキーをクリックして始めます。", bundle: Bundle.module, comment: ""))
                                 .padding()
                                 .font(.headline)
                                 .offset(y: -20)
@@ -84,11 +84,11 @@ public struct LocationPicker: View {
                     }, floatingViewHeight: 300, position: .bottom, backgroundColor: .clear)
                     .actionSheet(item: $selectedResultItem, content: { result in
                         ActionSheet(title: Text(result.name ?? ""), message: Text(result.placemark.thoroughfare ?? ""), buttons: [
-                            .default(Text("地図上に表示する"), action: {
+                            .default(Text(NSLocalizedString("地図上に表示する", bundle: Bundle.module, comment: "")), action: {
                                 self.mapRegion = .init(center: result.placemark.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
                                 self.annotationItems = MapSearchManager.shared.getAnnotationItems(forMapItems: [result])
                             }),
-                            .default(Text("この場所を選択する"), action: {
+                            .default(Text(NSLocalizedString("この場所を選択する", bundle: Bundle.module, comment: "")), action: {
                                 self.onLocationSelected(result)
                             }),
                             .cancel()
@@ -115,11 +115,11 @@ public struct LocationPicker: View {
                     })
                 
             }
-            .navigationBarTitle("場所を選択してください", displayMode: .inline)
+            .navigationBarTitle(NSLocalizedString("場所を選択してください", bundle: Bundle.module, comment: ""), displayMode: .inline)
             .navigationBarItems(leading: Button(action: {
                 self.onCancelled()
             }, label: {
-                Text("キャンセル")
+                Text(NSLocalizedString("キャンセル", bundle: Bundle.module, comment: ""))
             }))
             
         }
