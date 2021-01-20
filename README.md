@@ -4,7 +4,7 @@
 
 これはSwiftUIビューで、ユーザーは場所の名前を入力して位置を特定することができます。また、ユーザーの現在位置を把握し、マップの中心にその位置を表示することも可能です。
 
-(This is a location picker written in SwiftUI. A search bar and a map display are included in the view. English localization is included.)
+(This is a location picker written in SwiftUI. A search bar and a map display are included in the view.)
 
 <img width="350" alt="image" src="/demo-image.gif">
 
