@@ -88,8 +88,8 @@ public struct LocationPicker: View {
                             self.annotationItems = MapSearchManager.shared.getAnnotationItems(forMapItems: [result])
                         }),
                         .default(Text("この場所を選択する"), action: {
-                            self.onLocationSelected(result)
                             self.presentationMode.wrappedValue.dismiss()
+                            self.onLocationSelected(result)
                         }),
                         .cancel()
                     ])
