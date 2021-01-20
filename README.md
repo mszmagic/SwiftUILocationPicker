@@ -66,7 +66,7 @@ public init(shouldUseUserCurrentLocation: Bool,
 2. 上部のシステムバーの"File"をクリック
 3. "Swift Packages"をクリック、次いで"Add package dependency…"をクリック
 4. 以下のURLをペースト：`https://github.com/mszmagic/SwiftUILocationPicker.git`
-5. Version: `Up to Next Major 1.0.2 <`
+5. Branch: `main`
 6. "Next"をクリック
 7. "Done"をクリック。
 8. `import LocationPicker`
