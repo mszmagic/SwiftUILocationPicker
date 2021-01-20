@@ -27,95 +27,103 @@ public struct LocationPicker: View {
     private var shouldUseUserCurrentLocation: Bool
     private var onLocationSelected: (MKMapItem) -> Void
     
+    // これはユーザーがロケーションの選択を取り消したことを意味します。ビューを閉じてください。
+    private var onCancelled: () -> Void
+    
     /**
      ユーザーが検索結果を選択すると、それをマップ上で閲覧するか、`ActionSheet` を通じて選ぶかのオプションを表示します
      */
     @State private var selectedResultItem: MKMapItem?
     
     /**
-     ユーザーが場所を選択した時点で `dismiss` します。
-     */
-    @Environment(\.presentationMode) private var presentationMode
-    
-    /**
      検索は、ユーザーがキーボードのリターンキーをクリックしたとき（キーボードが解除されたとき）に実行されます。
      */
     private var keyboardHiddenNotification = NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
     
-    public init(shouldUseUserCurrentLocation: Bool, onLocationSelected: @escaping (MKMapItem) -> Void, initialMapDisplayCoordinate: CLLocationCoordinate2D = .init(latitude: 35.68110, longitude: 139.76687)) {
+    public init(shouldUseUserCurrentLocation: Bool, onLocationSelected: @escaping (MKMapItem) -> Void, onCancelled: @escaping () -> Void, initialMapDisplayCoordinate: CLLocationCoordinate2D = .init(latitude: 35.68110, longitude: 139.76687)) {
         self.shouldUseUserCurrentLocation = shouldUseUserCurrentLocation
         self._mapRegion = .init(initialValue: .init(center: initialMapDisplayCoordinate, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)))
         self.onLocationSelected = onLocationSelected
+        self.onCancelled = onCancelled
     }
     
     public var body: some View {
         
-        VStack {
+        NavigationView {
             
-            MapView(mapRegion: $mapRegion, annotationItems: $annotationItems)
-                .addOverlay({
-                    SearchTextFieldView(searchText: $mapSearchTerm)
-                }, floatingViewHeight: 100, position: .top, backgroundColor: .clear, verticalOffset: 20)
-                .addOverlay({
-                    if self.allSearchResults.count > 0 {
-                        List(self.allSearchResults, id: \.self) { result in
-                            Button(action: {
-                                self.selectedResultItem = result
-                            }, label: {
-                                VStack(alignment: .leading) {
-                                    Text(result.name ?? "")
-                                        .font(.headline)
-                                    Text(result.placemark.thoroughfare ?? "")
-                                }
-                            })
-                        }
-                        .clipped()
-                        .cornerRadius(20)
-                        .frame(height: 260)
-                        .padding()
-                        .listStyle(InsetGroupedListStyle())
-                    } else {
-                        Text("テキストフィールドにキーワードを入力し、キーボードのリターンキーをクリックして始めます。")
+            VStack {
+                
+                MapView(mapRegion: $mapRegion, annotationItems: $annotationItems)
+                    .addOverlay({
+                        SearchTextFieldView(searchText: $mapSearchTerm)
+                    }, floatingViewHeight: 100, position: .top, backgroundColor: .clear, verticalOffset: 20)
+                    .addOverlay({
+                        if self.allSearchResults.count > 0 {
+                            List(self.allSearchResults, id: \.self) { result in
+                                Button(action: {
+                                    self.selectedResultItem = result
+                                }, label: {
+                                    VStack(alignment: .leading) {
+                                        Text(result.name ?? "")
+                                            .font(.headline)
+                                        Text(result.placemark.thoroughfare ?? "")
+                                    }
+                                })
+                            }
+                            .clipped()
+                            .cornerRadius(20)
+                            .frame(height: 260)
                             .padding()
-                            .font(.headline)
-                            .offset(y: -20)
-                    }
-                }, floatingViewHeight: 300, position: .bottom, backgroundColor: .clear)
-                .actionSheet(item: $selectedResultItem, content: { result in
-                    ActionSheet(title: Text(result.name ?? ""), message: Text(result.placemark.thoroughfare ?? ""), buttons: [
-                        .default(Text("地図上に表示する"), action: {
-                            self.mapRegion = .init(center: result.placemark.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
-                            self.annotationItems = MapSearchManager.shared.getAnnotationItems(forMapItems: [result])
-                        }),
-                        .default(Text("この場所を選択する"), action: {
-                            self.presentationMode.wrappedValue.dismiss()
-                            self.onLocationSelected(result)
-                        }),
-                        .cancel()
-                    ])
-                })
-                .onChange(of: self.location.userLocation, perform: { value in
-                    guard annotationItems.count == 0 else { return }
-                    guard let userLocation = value?.coordinate else { return }
-                    self.mapRegion = .init(center: userLocation, span: self.mapRegion.span)
-                })
-                .onAppear(perform: {
-                    if shouldUseUserCurrentLocation {
-                        location.locationManager.requestWhenInUseAuthorization()
-                        location.locationManager.requestLocation()
-                    }
-                })
-                .onDisappear(perform: {
-                    location.locationManager.stopUpdatingLocation()
-                })
-                .onReceive(keyboardHiddenNotification, perform: { _ in
-                    MapSearchManager.shared.searchLocation(name: self.mapSearchTerm, mapRegion: self.mapRegion) { items in
-                        self.allSearchResults = items
-                    }
-                })
+                            .listStyle(InsetGroupedListStyle())
+                        } else {
+                            Text("テキストフィールドにキーワードを入力し、キーボードのリターンキーをクリックして始めます。")
+                                .padding()
+                                .font(.headline)
+                                .offset(y: -20)
+                        }
+                    }, floatingViewHeight: 300, position: .bottom, backgroundColor: .clear)
+                    .actionSheet(item: $selectedResultItem, content: { result in
+                        ActionSheet(title: Text(result.name ?? ""), message: Text(result.placemark.thoroughfare ?? ""), buttons: [
+                            .default(Text("地図上に表示する"), action: {
+                                self.mapRegion = .init(center: result.placemark.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+                                self.annotationItems = MapSearchManager.shared.getAnnotationItems(forMapItems: [result])
+                            }),
+                            .default(Text("この場所を選択する"), action: {
+                                self.onLocationSelected(result)
+                            }),
+                            .cancel()
+                        ])
+                    })
+                    .onChange(of: self.location.userLocation, perform: { value in
+                        guard annotationItems.count == 0 else { return }
+                        guard let userLocation = value?.coordinate else { return }
+                        self.mapRegion = .init(center: userLocation, span: self.mapRegion.span)
+                    })
+                    .onAppear(perform: {
+                        if shouldUseUserCurrentLocation {
+                            location.locationManager.requestWhenInUseAuthorization()
+                            location.locationManager.requestLocation()
+                        }
+                    })
+                    .onDisappear(perform: {
+                        location.locationManager.stopUpdatingLocation()
+                    })
+                    .onReceive(keyboardHiddenNotification, perform: { _ in
+                        MapSearchManager.shared.searchLocation(name: self.mapSearchTerm, mapRegion: self.mapRegion) { items in
+                            self.allSearchResults = items
+                        }
+                    })
+                
+            }
+            .navigationBarTitle("場所を選択してください", displayMode: .inline)
+            .navigationBarItems(leading: Button(action: {
+                self.onCancelled()
+            }, label: {
+                Text("キャンセル")
+            }))
             
         }
-        .navigationBarTitle("", displayMode: .inline)
+        .navigationViewStyle(StackNavigationViewStyle())
         
     }
     
